@@ -4,6 +4,22 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-09-07
+
+### Fixed
+
+- `FfmKqueueBackend`/`FfmSignalfdBackend` declared `supportedSignals()` as
+  `public static`, which cannot implement `SignalBackend`'s `default`
+  (instance) method - this never actually satisfied the interface, it just
+  wasn't caught before JDK 22's stricter compiler exercised it. Renamed the
+  static, stateless computation to `staticSupportedSignals()` and added a
+  proper instance override that delegates to it; updated the one reflective
+  call site (`beckon-ffm/capabilities`) to match.
+
+### Changed
+
+- Bump `net.clojars.savya/beckon` to **0.7.0**.
+
 ## [0.6.0] - 2026-08-28
 
 ### Added
