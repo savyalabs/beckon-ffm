@@ -7,7 +7,7 @@
             [beckon :as beckon]
             [beckon-ffm :as beckon-ffm])
   (:import (com.hypirion.beckon SignalRegistererHelper)
-           (java.lang.reflect InvocationTargetException)
+           (java.lang.reflect InvocationTargetException Modifier)
            (java.lang.foreign FunctionDescriptor Linker Linker$Option MemoryLayout MemorySegment
                               ValueLayout)))
 
@@ -95,6 +95,14 @@
   (testing "this platform loads an FFM backend"
     (is (contains? #{"FfmSignalfdBackend" "FfmKqueueBackend"}
                    (SignalRegistererHelper/backendName)))))
+
+(deftest ffm-backends-implement-supported-signals-as-instance-methods
+  (doseq [class-name ["com.hypirion.beckon.FfmKqueueBackend"
+                      "com.hypirion.beckon.FfmSignalfdBackend"]]
+    (let [method (.getMethod (Class/forName class-name) "supportedSignals"
+                             (make-array Class 0))]
+      (is (not (Modifier/isStatic (.getModifiers method)))
+          (str class-name ".supportedSignals() must implement SignalBackend")))))
 
 (deftest capabilities-are-side-effect-free-and-actionable
   (let [capability-fn (ns-resolve 'beckon-ffm 'capabilities)]

@@ -26,7 +26,7 @@
   []
   (let [backend (backend-name)
         klass (Class/forName (str "com.hypirion.beckon." backend))
-        method (.getMethod klass "supportedSignals" (make-array Class 0))
+        method (.getMethod klass "staticSupportedSignals" (make-array Class 0))
         version (first (re-find #"^(\d+)" (System/getProperty "java.version")))]
     {:os (System/getProperty "os.name")
      :architecture (System/getProperty "os.arch")
