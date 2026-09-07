@@ -83,8 +83,13 @@ public final class FfmSignalfdBackend implements SignalBackend {
     }
 
     /** Return the signal names accepted by this platform backend. */
-    public static Set<String> supportedSignals() {
+    public static Set<String> staticSupportedSignals() {
         return Collections.unmodifiableSet(SIGNOS.keySet());
+    }
+
+    @Override
+    public Set<String> supportedSignals() {
+        return staticSupportedSignals();
     }
 
     private static MemorySegment symbol(SymbolLookup lookup, String name) {
